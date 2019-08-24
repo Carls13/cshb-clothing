@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import HomePage from './pages/homepage/homepage.component.jsx'
 import ShopPage from './pages/shop/shop.component.jsx'
-import SignInUpPage from './pages/sign-in-up/sign-in-up.component.jsx'
+import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx'
 import CheckoutPage from './pages/checkout/checkout.component.jsx'
 
 import Header from './components/header/header.component.jsx'
@@ -59,7 +59,7 @@ class App extends React.Component{
             this.props.currentUser ? 
             (<Redirect to="/" /> 
               ) : (
-              <SignInUpPage/>
+              <SignInAndSignUpPage/>
               )
           } />
         </Switch>
