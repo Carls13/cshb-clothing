@@ -12,7 +12,6 @@ import Header from './components/header/header.component.jsx'
 
 // eslint-disable-next-line
 import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils';
-import { setCurrentUser } from './redux/user/user.actions'
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { createStructuredSelector } from 'reselect';
 import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
@@ -23,7 +22,7 @@ class App extends React.Component{
 
   componentDidMount() {
     // eslint-disable-next-line
-    const { setCurrentUser, collectionsArray } = this.props;
+    const { collectionsArray } = this.props;
     
     //Adding data to Firebase (just once)
 
@@ -33,21 +32,21 @@ class App extends React.Component{
     //     )
     //   );
 
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth=>{
-      if (userAuth){
-        const userRef = await createUserProfileDocument(userAuth);
+    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth=>{
+    //   if (userAuth){
+    //     const userRef = await createUserProfileDocument(userAuth);
 
-        userRef.onSnapshot(snapShot=>{
-          setCurrentUser({
-              id: snapShot.id,
-              ...snapShot.data()
-          });
-        });
+    //     userRef.onSnapshot(snapShot=>{
+    //       setCurrentUser({
+    //           id: snapShot.id,
+    //           ...snapShot.data()
+    //       });
+    //     });
         
-      } else{
-        setCurrentUser(userAuth);
-      }
-    })
+    //   } else{
+    //     setCurrentUser(userAuth);
+    //   }
+    // })
   }
 
   componentWillUnmount() {
@@ -83,9 +82,4 @@ const mapStateToProps = (state) =>createStructuredSelector({
   collectionsArray: selectCollectionsForPreview
 })
 
-const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
-})
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);
