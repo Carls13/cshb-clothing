@@ -12,6 +12,9 @@ import Header from './components/header/header.component.jsx'
 
 // eslint-disable-next-line
 import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils';
+
+import { checkUserSession } from './redux/user/user.actions';
+
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { createStructuredSelector } from 'reselect';
 import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
@@ -47,6 +50,9 @@ class App extends React.Component{
     //     setCurrentUser(userAuth);
     //   }
     // })
+
+    const { checkUserSession } = this.props;
+    checkUserSession();
   }
 
   componentWillUnmount() {
@@ -82,4 +88,8 @@ const mapStateToProps = (state) =>createStructuredSelector({
   collectionsArray: selectCollectionsForPreview
 })
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  checkUserSession: () => dispatch(checkUserSession())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
