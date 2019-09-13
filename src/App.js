@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -19,13 +19,11 @@ import { selectCurrentUser } from './redux/user/user.selectors';
 import { createStructuredSelector } from 'reselect';
 import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
 
-class App extends React.Component{
+const App = ({ checkUserSession, collectionsArray, currentUser}) => {
 
-  unsubscribeFromAuth = null;
-
-  componentDidMount() {
-    // eslint-disable-next-line
-    const { collectionsArray } = this.props;
+  useEffect(() => {
+    checkUserSession();
+  }, [checkUserSession]);
     
     //Adding data to Firebase (just once)
 
@@ -51,15 +49,6 @@ class App extends React.Component{
     //   }
     // })
 
-    const { checkUserSession } = this.props;
-    checkUserSession();
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
-
-  render(){
     return (
       <div>
         <Header/>
@@ -71,7 +60,7 @@ class App extends React.Component{
             exact 
             path="/signIn" 
             render={() => 
-            this.props.currentUser ? 
+            currentUser ? 
             (<Redirect to="/" /> 
               ) : (
               <SignInAndSignUpPage/>
@@ -80,7 +69,6 @@ class App extends React.Component{
         </Switch>
       </div>
     );
-  }
 }
 
 const mapStateToProps = (state) =>createStructuredSelector({
