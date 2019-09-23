@@ -1,6 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-import { addItemToCart, removeItemfromCart } from './cart.utils';
+import { addItemToCart, 
+	removeItemFromCart, 
+	filterItemFromCart, 
+	getCartItemsCount,
+	getCartTotal } from './cart.utils';
 
 export const CartContext = createContext({
 	hidden: true,
@@ -9,16 +13,30 @@ export const CartContext = createContext({
 	addItem: () => {},
 	removeItem: () => {},
 	clearItemFromCart: () => {},
-	cartItemsCount: 0
+	cartItemsCount: 0,
+	total: 0,
 });
 
 const CartProvider = ({ children }) => {
 	const [hidden, setHidden] = useState(true);
 	const [cartItems, setCartItems] = useState([]);
 	const [cartItemsCount, setCartItemsCount] = useState(0);
+	const [total, setCartItemsTotal] = useState(0);
 
 	const addItem = item => setCartItems(addItemToCart(cartItems, item));
+	const removeItem = item => setCartItems(removeItemFromCart(cartItems, item));
+	
 	const toggleHidden = () => setHidden(!hidden);
+
+	const clearItemFromCart = item => setCartItems(filterItemFromCart(cartItems, item))
+	
+	useEffect(() => {
+		setCartItemsCount(getCartItemsCount(cartItems))
+	}, [cartItems])
+
+	useEffect(() => {
+		setCartItemsTotal(getCartTotal(cartItems))
+	}, [cartItems])
 
 	return (
 		<CartContext.Provider
@@ -27,9 +45,11 @@ const CartProvider = ({ children }) => {
 				toggleHidden,
 				cartItems,
 				addItem,
-				cartItemsCount
-			}}
-		>
+				removeItem,
+				cartItemsCount,
+				clearItemFromCart,
+				total
+			}}>
 			{children}
 		</CartContext.Provider>
 		);
